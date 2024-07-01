@@ -1,4 +1,4 @@
-package com.cbtest.state.impl.Account;
+package com.cbtest.state.impl.account;
 
 import com.cbtest.dto.AccountDto;
 import com.cbtest.exceptions.account.AccountExistsException;
@@ -14,7 +14,6 @@ import com.cbtest.state.ConsoleState;
 import com.cbtest.state.impl.MainState;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 public class CreateAccountState implements ConsoleState {
@@ -23,6 +22,8 @@ public class CreateAccountState implements ConsoleState {
     private final ClientService clientService;
     private final ConsoleManager consoleManager;
     private ConsoleState nextState;
+
+    private Client client;
 
     public CreateAccountState() {
         this.accountService = AccountServiceFactory.getAccountService();
@@ -39,14 +40,16 @@ public class CreateAccountState implements ConsoleState {
             for (int i = 0; i < clients.size(); i++) {
                 sb.append(i + 1).append(" - ").append(clients.get(i).getFullName()).append("\n");
             }
+            System.out.print(sb.toString());
+
             int number;
             do {
                 System.out.println("Введите номер клиента:");
                 number = Integer.parseInt(consoleManager.readLine());
             } while (number < 1 || number > clients.size());
 
-            Client client = clients.get(number - 1);
-            System.out.print(sb.toString());
+            client = clients.get(number - 1);
+            System.out.println("Клиент - " + client.getFullName());
         } catch (NoSuchElementException e) {
             System.out.println("Клиенты не найдены. Нажмите 'Enter' для возврата в главное меню");
             consoleManager.readLine();
@@ -78,6 +81,7 @@ public class CreateAccountState implements ConsoleState {
                     .bik(bik)
                     .currency(Account.Currency.valueOf(currency))
                     .balance(BigDecimal.valueOf(0))
+                    .client(client)
                     .isValid(true)
                     .build();
             accountService.addAccount(AccountDto.from(account));

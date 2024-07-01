@@ -4,8 +4,8 @@ package com.cbtest.state.impl;
 import com.cbtest.in.ConsoleManager;
 import com.cbtest.in.ConsoleManagerFactory;
 import com.cbtest.state.ConsoleState;
-import com.cbtest.state.impl.Account.CloseAccountState;
-import com.cbtest.state.impl.Account.CreateAccountState;
+import com.cbtest.state.impl.account.CloseAccountState;
+import com.cbtest.state.impl.account.CreateAccountState;
 import com.cbtest.state.impl.client.CreateClientState;
 
 public class MainState implements ConsoleState {

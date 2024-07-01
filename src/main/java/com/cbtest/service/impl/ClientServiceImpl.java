@@ -8,6 +8,7 @@ import com.cbtest.repository.memory.client.ClientRepositoryFactory;
 import com.cbtest.service.ClientService;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class ClientServiceImpl implements ClientService {
 
@@ -32,8 +33,13 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public List<Client> getAllClients() {
+    public List<Client> getAllClients() throws NoSuchElementException {
         return clientRepository.getAllClients().orElseThrow();
+    }
+
+    @Override
+    public List<Client> getAllClientsByAccountIsExists() throws NoSuchElementException{
+        return clientRepository.getAllByAccountsNotEmpty().orElseThrow();
     }
 
 

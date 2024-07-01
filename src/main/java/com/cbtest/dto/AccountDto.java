@@ -26,7 +26,7 @@ public class AccountDto {
                .accountNumber(account.getAccountNumber())
                .balance(account.getBalance())
                .bik(account.getBik())
-               .currency(account.getCurrency())
+               .currency(String.valueOf(account.getCurrency()).toUpperCase())
                .client(account.getClient())
                 .isValid(account.getIsValid())
                .build();

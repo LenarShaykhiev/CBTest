@@ -29,9 +29,6 @@ public class ClientRepositoryImpl implements ClientRepository {
 
     @Override
     public Optional<List<Client>> getAllByAccountsNotEmpty() {
-        if (memory.isEmpty()) {
-            return Optional.empty();
-        }
         return Optional.of(memory.values()
                 .stream()
                 .filter(client -> !client.getAccounts().isEmpty())
@@ -40,9 +37,6 @@ public class ClientRepositoryImpl implements ClientRepository {
 
     @Override
     public Optional<List<Client>> getAllClients() {
-        if (memory.isEmpty()) {
-            return Optional.empty();
-        }
         return Optional.of(new ArrayList<>(memory.values()));
     }
 }

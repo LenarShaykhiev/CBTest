@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface ClientService {
     Client signUp(SignUpForm form) throws ClientExistException;
-
     List<Client> getAllClients();
+    List<Client> getAllClientsByAccountIsExists();
 }

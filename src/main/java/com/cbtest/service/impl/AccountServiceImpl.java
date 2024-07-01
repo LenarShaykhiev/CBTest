@@ -2,13 +2,16 @@ package com.cbtest.service.impl;
 
 import com.cbtest.dto.AccountDto;
 import com.cbtest.exceptions.account.AccountExistsException;
+import com.cbtest.exceptions.account.AccountNotExistsException;
 import com.cbtest.models.Account;
+import com.cbtest.models.Client;
 import com.cbtest.repository.AccountRepository;
 import com.cbtest.repository.memory.account.AccountRepositoryFactory;
 import com.cbtest.service.AccountService;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class AccountServiceImpl implements AccountService {
@@ -35,14 +38,24 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Account closeAccount(AccountDto account) {
+    public Account closeAccount(AccountDto account) throws AccountNotExistsException {
         Optional<Account> accountOpt = accountRepository.getAccountByAccountNumber(account.getAccountNumber());
         if (accountOpt.isPresent()) {
             Account accountToUpdate = accountOpt.get();
             accountToUpdate.setIsValid(false);
             return accountRepository.saveAccount(accountToUpdate);
         } else {
-            throw new IllegalArgumentException("Аккаунт с таким номером не найден!");
+            throw new AccountNotExistsException("Аккаунт с таким номером не найден!");
+        }
+    }
+
+    @Override
+    public List<Account> getAccountsByClient(Client client) throws AccountNotExistsException {
+        Optional<List<Account>> accountsOpt = accountRepository.getAccountsByClientNumber(client.getNumber());
+        if (accountsOpt.isPresent()) {
+            return accountsOpt.get();
+        } else {
+            throw new AccountNotExistsException("У данного клиента нет открытого счета!");
         }
     }
 
