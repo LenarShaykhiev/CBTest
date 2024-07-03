@@ -7,6 +7,8 @@ import com.cbtest.state.ConsoleState;
 import com.cbtest.state.impl.account.CloseAccountState;
 import com.cbtest.state.impl.account.CreateAccountState;
 import com.cbtest.state.impl.client.CreateClientState;
+import com.cbtest.state.impl.transaction.DepositState;
+import com.cbtest.state.impl.transaction.SendState;
 
 public class MainState implements ConsoleState {
 
@@ -20,10 +22,10 @@ public class MainState implements ConsoleState {
     @Override
     public void run() throws Exception {
         System.out.printf("Выберите действие:%n '1' - Создать клиента%n " +
-                "'2' - Создать счет клиенту%n" +
+                "'2' - Создать счет клиенту%n " +
                 "'3' - Закрыть счет клиенту%n " +
-                "'4' - Перевести денежные средства% " +
-                "'5' - зачислить денежные средства");
+                "'4' - Перевести денежные средства%n " +
+                "'5' - зачислить денежные средства%n");
         String input = consoleManager.readLine();
         if (input == null) {
             System.out.println("Введите нужный пункт:");
@@ -41,11 +43,11 @@ public class MainState implements ConsoleState {
                 consoleManager.clear();
             }
             case "4" -> {
-                nextState = new TransferMoneyState();
+                nextState = new SendState();
                 consoleManager.clear();
             }
             case "5" -> {
-                nextState = new DepositMoneyState();
+                nextState = new DepositState();
                 consoleManager.clear();
             }
             default -> {

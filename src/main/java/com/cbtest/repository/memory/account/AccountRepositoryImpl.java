@@ -1,5 +1,6 @@
 package com.cbtest.repository.memory.account;
 
+import com.cbtest.exceptions.account.AccountNotExistsException;
 import com.cbtest.models.Account;
 import com.cbtest.repository.AccountRepository;
 
@@ -31,13 +32,18 @@ public class AccountRepositoryImpl implements AccountRepository {
 
 
     @Override
-    public Account deleteAccountByAccountNumber(String accountNumber) {
+    public Account deleteAccountByAccountNumber(String accountNumber) throws AccountNotExistsException {
         Account account = memory.getOrDefault(accountNumber, null);
         if (account != null && account.getIsValid()) {
             account.setIsValid(false);
         } else {
-            throw new IllegalStateException("Счет не существует или уже был удален");
+            throw new AccountNotExistsException("Счет не существует или уже был удален");
         }
         return account;
+    }
+
+    @Override
+    public Optional<List<Account>> getAccountsByIsValid() {
+        return Optional.of(memory.values().stream().filter(Account::getIsValid).toList());
     }
 }

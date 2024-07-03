@@ -14,6 +14,7 @@ import com.cbtest.state.ConsoleState;
 import com.cbtest.state.impl.MainState;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 public class CreateAccountState implements ConsoleState {
@@ -34,13 +35,13 @@ public class CreateAccountState implements ConsoleState {
     @Override
     public void run() throws Exception {
         try {
-            var clients = clientService.getAllClients();
+            List<Client> clients = clientService.getAllClients();
             System.out.println("Выберите клиента (введите номер клиента, которому нужно создать счет):");
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < clients.size(); i++) {
                 sb.append(i + 1).append(" - ").append(clients.get(i).getFullName()).append("\n");
             }
-            System.out.print(sb.toString());
+            System.out.print(sb);
 
             int number;
             do {

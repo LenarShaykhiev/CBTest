@@ -12,6 +12,7 @@ import java.util.List;
 public interface AccountService {
     Account addAccount(AccountDto account) throws AccountExistsException;
     Account closeAccount(AccountDto account) throws AccountNotExistsException;
+    List<Account> getAllValidAccounts() throws AccountNotExistsException;
 
     List<Account> getAccountsByClient(Client client) throws AccountNotExistsException;
 }

@@ -1,5 +1,6 @@
 package com.cbtest.state.impl.account;
 
+import com.cbtest.exceptions.account.AccountNotExistsException;
 import com.cbtest.in.ConsoleManager;
 import com.cbtest.in.ConsoleManagerFactory;
 import com.cbtest.models.Account;
@@ -74,14 +75,16 @@ public class CloseAccountState implements ConsoleState {
 
             account = accounts.get(number - 1);
             accountService.closeAccount(from(account));
+            System.out.println("Аккаунт " + account.getAccountNumber() + "закрыт.");
+        } catch (AccountNotExistsException e) {
+            System.out.println("У запрашиваемого клиента нет открытого счета. Нажмите 'Enter' для возврата в главное меню");
+        } finally {
+            consoleManager.readLine();
+            consoleManager.clear();
+            nextState = new MainState();
         }
-
-
-
-
-
-
     }
+
 
     @Override
     public ConsoleState nextState() {

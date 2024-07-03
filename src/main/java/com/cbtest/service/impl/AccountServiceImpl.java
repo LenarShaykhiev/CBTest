@@ -50,9 +50,19 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    public List<Account> getAllValidAccounts() throws AccountNotExistsException {
+        Optional<List<Account>> accountsOpt = accountRepository.getAccountsByIsValid();
+        if (accountsOpt.isPresent() && !accountsOpt.get().isEmpty()) {
+            return accountsOpt.get();
+        } else {
+            throw new AccountNotExistsException("Открытых счетов не найдено!");
+        }
+    }
+
+    @Override
     public List<Account> getAccountsByClient(Client client) throws AccountNotExistsException {
         Optional<List<Account>> accountsOpt = accountRepository.getAccountsByClientNumber(client.getNumber());
-        if (accountsOpt.isPresent()) {
+        if (accountsOpt.isPresent() && !accountsOpt.get().isEmpty()) {
             return accountsOpt.get();
         } else {
             throw new AccountNotExistsException("У данного клиента нет открытого счета!");
@@ -61,7 +71,7 @@ public class AccountServiceImpl implements AccountService {
 
     private void addAccountValidation(Account account) throws AccountExistsException {
         if (accountRepository.getAccountByAccountNumber(account.getAccountNumber()).isPresent()) {
-            throw new AccountExistsException("Account with number " + account.getAccountNumber() + " already exists");
+            throw new AccountExistsException("Счет с номером " + account.getAccountNumber() + " уже существует!");
         }
     }
 }

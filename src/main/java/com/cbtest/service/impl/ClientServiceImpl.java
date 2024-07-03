@@ -2,6 +2,7 @@ package com.cbtest.service.impl;
 
 import com.cbtest.dto.SignUpForm;
 import com.cbtest.exceptions.clent.ClientExistException;
+import com.cbtest.exceptions.clent.ClientNotExistException;
 import com.cbtest.models.Client;
 import com.cbtest.repository.ClientRepository;
 import com.cbtest.repository.memory.client.ClientRepositoryFactory;
@@ -33,13 +34,18 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public List<Client> getAllClients() throws NoSuchElementException {
-        return clientRepository.getAllClients().orElseThrow();
+    public List<Client> getAllClients() throws NoSuchElementException, ClientNotExistException {
+        if (clientRepository.getAllClients().isPresent() && !clientRepository.getAllClients().get().isEmpty()) {
+            return clientRepository.getAllClients().get();
+        } else {
+            throw new ClientNotExistException("Нет созданных клиентов!");
+        }
+
     }
 
     @Override
-    public List<Client> getAllClientsByAccountIsExists() throws NoSuchElementException{
-        return clientRepository.getAllByAccountsNotEmpty().orElseThrow();
+    public List<Client> getAllClientsByAccountIsExists() throws NoSuchElementException, ClientExistException {
+        return clientRepository.getAllByAccountsNotEmpty().orElseThrow(() -> new ClientExistException("Нет созданных клиентов"));
     }
 
 

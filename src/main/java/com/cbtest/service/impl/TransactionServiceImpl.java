@@ -1,5 +1,6 @@
 package com.cbtest.service.impl;
 
+import com.cbtest.exceptions.transaction.OutOfMoney;
 import com.cbtest.models.Account;
 import com.cbtest.models.Transaction;
 import com.cbtest.service.TransactionService;
@@ -8,7 +9,7 @@ import java.math.BigDecimal;
 
 public class TransactionServiceImpl implements TransactionService {
     @Override
-    public void credit(Transaction transaction) {
+    public void send(Transaction transaction) throws OutOfMoney {
 
         Account from = transaction.getFrom();
         Account to = transaction.getTo();
@@ -20,7 +21,7 @@ public class TransactionServiceImpl implements TransactionService {
             from.setBalance(from.getBalance().subtract(transaction.getSum()));
             to.setBalance(to.getBalance().add(transaction.getSum()));
         } else {
-            throw new IllegalArgumentException("На балансе отправителя недостаточно денег!");
+            throw new OutOfMoney("На балансе отправителя недостаточно денег!");
         } // TODO: rollback
     }
 

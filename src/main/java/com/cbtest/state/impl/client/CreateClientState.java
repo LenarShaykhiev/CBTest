@@ -23,6 +23,7 @@ public class CreateClientState implements ConsoleState {
 
     @Override
     public void run() throws Exception {
+
         String firstName;
         do {
             System.out.println("Введите имя:");
@@ -64,7 +65,7 @@ public class CreateClientState implements ConsoleState {
             clientService.signUp(signUpForm);
             System.out.println("Клиент " + signUpForm.getFullName() + " успешно создан! Нажмите 'Enter' для возврата в главное меню");
         } catch (ClientExistException e) {
-            System.out.println(e.getMessage() + "Нажмите 'Enter' для возврата в главное меню");
+            System.out.println("Клиент с таким ИНН уже существует. Нажмите 'Enter' для возврата в главное меню");
         } finally {
             consoleManager.readLine();
             consoleManager.clear();
