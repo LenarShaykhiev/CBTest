@@ -16,14 +16,15 @@ import com.cbtest.state.impl.MainState;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static com.cbtest.mapper.FromDtoMapper.accFromDto;
+
 public class SendState implements ConsoleState {
 
     private final AccountService accountService;
     private final TransactionService transactionService;
     private final ConsoleManager consoleManager;
     private ConsoleState nextState;
-    private Account sender;
-    private Account receiver;
+
     public SendState() {
         this.accountService = AccountServiceFactory.getAccountService();
         this.transactionService = TransactionServiceFactory.getTransactionService();
@@ -33,8 +34,8 @@ public class SendState implements ConsoleState {
 
     @Override
     public void run() throws Exception {
-        try {
-            List<Account> accounts = accountService.getAllValidAccounts();
+//        try {
+            List<Account> accounts = accFromDto(accountService.getAllValidAccounts());
             System.out.println("Выберите счет отправителя (введите номер счета, с которого отправятся деньги):");
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < accounts.size(); i++) {
@@ -48,7 +49,7 @@ public class SendState implements ConsoleState {
                 number = Integer.parseInt(consoleManager.readLine());
             } while (number < 1 || number > accounts.size());
 
-            sender = accounts.get(number - 1);
+        Account sender = accounts.get(number - 1);
             System.out.println("Счет-отправитель - " + sender.getAccountNumber());
 
             int sum; // TODO: оптимизировать под BigDecimal
@@ -63,12 +64,14 @@ public class SendState implements ConsoleState {
             System.out.println(sb);
 
             int numberRes;
+            Account receiver;
             do {
                 System.out.println("Введите порядковый номер счета:");
                 numberRes = Integer.parseInt(consoleManager.readLine());
                 if (numberRes == number) {
-                    throw new IllegalArgumentException("Нельзя перевести деньги на сам себя!");
+                    throw new IllegalArgumentException("Нельзя перевести деньги со счета на тот же счет!");
                 }
+                receiver = accounts.get(numberRes);
             } while (numberRes < 1 || numberRes > accounts.size());
 
             Transaction transaction = Transaction.builder()
@@ -81,12 +84,13 @@ public class SendState implements ConsoleState {
             System.out.println("Перевод успешно выполнен. Нажмите 'Enter' для возврата в главное меню");
 //        } catch (AccountNotExistsException e) {
 //            throw new AccountNotExistsException("Нет таких");
-        } catch (IllegalArgumentException | OutOfMoney e) {
-            System.out.println(e.getMessage());
-        } finally {
+//        } catch (IllegalArgumentException | OutOfMoney e) {
+//            System.out.println(e.getMessage());
+//        } finally {
+            consoleManager.readLine();
             consoleManager.clear();
             nextState = new MainState();
-        }
+//        }
 
 
     }

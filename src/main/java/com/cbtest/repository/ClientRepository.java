@@ -10,6 +10,9 @@ public interface ClientRepository {
     Optional<Client> getClientByNumber(String number);
     Optional<List<Client>> findAll();
     Optional<List<Client>> getAllByAccountsNotEmpty();
+
+    Optional<Client> updateClient(Client client, String number);
+
     Optional<List<Client>> getAllClients();
 
 }

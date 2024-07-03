@@ -1,8 +1,10 @@
 package com.cbtest.service.impl;
 
+import com.cbtest.dto.ClientDto;
 import com.cbtest.dto.SignUpForm;
 import com.cbtest.exceptions.clent.ClientExistException;
 import com.cbtest.exceptions.clent.ClientNotExistException;
+import com.cbtest.models.Account;
 import com.cbtest.models.Client;
 import com.cbtest.repository.ClientRepository;
 import com.cbtest.repository.memory.client.ClientRepositoryFactory;
@@ -10,6 +12,10 @@ import com.cbtest.service.ClientService;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
+
+import static com.cbtest.dto.ClientDto.from;
+import static com.cbtest.mapper.FromDtoMapper.clientFromDto;
 
 public class ClientServiceImpl implements ClientService {
 
@@ -34,9 +40,9 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public List<Client> getAllClients() throws NoSuchElementException, ClientNotExistException {
+    public List<ClientDto> getAllClients() throws ClientNotExistException {
         if (clientRepository.getAllClients().isPresent() && !clientRepository.getAllClients().get().isEmpty()) {
-            return clientRepository.getAllClients().get();
+            return from(clientRepository.getAllClients().get());
         } else {
             throw new ClientNotExistException("Нет созданных клиентов!");
         }
@@ -44,8 +50,19 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public List<Client> getAllClientsByAccountIsExists() throws NoSuchElementException, ClientExistException {
-        return clientRepository.getAllByAccountsNotEmpty().orElseThrow(() -> new ClientExistException("Нет созданных клиентов"));
+    public List<ClientDto> getAllClientsByAccountIsExists() throws NoSuchElementException, ClientExistException {
+        if (clientRepository.getAllByAccountsNotEmpty().isPresent() && !clientRepository.getAllByAccountsNotEmpty().get().isEmpty()) {
+            return from(clientRepository.getAllByAccountsNotEmpty().get());
+        } else {
+            throw new ClientExistException("Нет созданных клиентов");
+        }
+    }
+
+    @Override
+    public ClientDto updateClient(ClientDto clientDto, String number) throws ClientNotExistException {
+        Client client = clientFromDto(clientDto);
+        clientRepository.updateClient(client, number);
+        return from(client);
     }
 
 

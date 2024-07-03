@@ -36,6 +36,12 @@ public class ClientRepositoryImpl implements ClientRepository {
     }
 
     @Override
+    public Optional<Client> updateClient(Client client, String number) {
+        memory.put(number, client);
+        return Optional.ofNullable(memory.get(number));
+    }
+
+    @Override
     public Optional<List<Client>> getAllClients() {
         return Optional.of(new ArrayList<>(memory.values()));
     }

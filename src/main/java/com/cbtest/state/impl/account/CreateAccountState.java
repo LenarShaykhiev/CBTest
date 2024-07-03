@@ -17,6 +17,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import static com.cbtest.mapper.FromDtoMapper.clientFromDto;
+
 public class CreateAccountState implements ConsoleState {
 
     private final AccountService accountService;
@@ -35,7 +37,7 @@ public class CreateAccountState implements ConsoleState {
     @Override
     public void run() throws Exception {
         try {
-            List<Client> clients = clientService.getAllClients();
+            List<Client> clients = clientFromDto(clientService.getAllClients());
             System.out.println("Выберите клиента (введите номер клиента, которому нужно создать счет):");
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < clients.size(); i++) {
@@ -80,7 +82,7 @@ public class CreateAccountState implements ConsoleState {
             Account account = Account.builder()
                     .accountNumber(accountNumber)
                     .bik(bik)
-                    .currency(Account.Currency.valueOf(currency))
+                    .currency(Account.Currency.valueOf(currency.toUpperCase()))
                     .balance(BigDecimal.valueOf(0))
                     .client(client)
                     .isValid(true)

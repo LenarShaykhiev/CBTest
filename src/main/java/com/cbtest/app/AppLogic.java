@@ -18,6 +18,7 @@ public class AppLogic {
                 }
             } catch (Exception e) {
                 System.err.println("Проблемы с вводом:" + e.getMessage());
+//                wait(1000);
                 state = new MainState();
             }
         }

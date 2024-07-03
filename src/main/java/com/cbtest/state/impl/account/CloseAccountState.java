@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import static com.cbtest.dto.AccountDto.from;
+import static com.cbtest.mapper.FromDtoMapper.accFromDto;
+import static com.cbtest.mapper.FromDtoMapper.clientFromDto;
 
 public class CloseAccountState implements ConsoleState {
 
@@ -35,7 +37,7 @@ public class CloseAccountState implements ConsoleState {
     @Override
     public void run() throws Exception {
         try {
-            List<Client> clients = clientService.getAllClientsByAccountIsExists();
+            List<Client> clients = clientFromDto(clientService.getAllClientsByAccountIsExists());
             System.out.println("Выберите клиента (введите номер клиента, чей счет нужно закрыть):");
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < clients.size(); i++) {
@@ -59,7 +61,7 @@ public class CloseAccountState implements ConsoleState {
         }
 
         try {
-            List<Account> accounts = accountService.getAccountsByClient(client);
+            List<Account> accounts = accFromDto(accountService.getAccountsByClient(client));
             System.out.println("Выберите счет для закрытия (введите номер счета):");
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < accounts.size(); i++) {
