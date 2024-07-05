@@ -11,6 +11,9 @@ public class ClientRepositoryImpl implements ClientRepository {
 
     @Override
     public Client createClient(Client client) {
+        if (client.getAccounts() == null) {
+            client.setAccounts(new ArrayList<>());
+        }
         return memory.put(client.getNumber(), client);
     }
 

@@ -35,20 +35,11 @@ public class DepositState implements ConsoleState {
 
         List<Account> accounts = accFromDto(accountService.getAllValidAccounts());
 
-        int sum; // TODO: оптимизировать под BigDecimal
-        do {
-            System.out.println("Введите сумму пополнения:");
-            sum = Integer.parseInt(consoleManager.readLine());
-        } while (sum <= 0);
-
-        consoleManager.clear();
-
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < accounts.size(); i++) {
-            sb.append(i + 1).append(" - ").append(accounts.get(i).getAccountNumber()).append("\n");
+            sb.append(i + 1).append(" - ").append(accounts.get(i).
+                    getAccountNumber()).append(" - ").append(accounts.get(i).getCurrency()).append("\n");
         }
-        System.out.print(sb);
-
         System.out.println("Выберите счет получателя (введите номер счета, на который отправятся деньги):");
         System.out.println(sb);
 
@@ -57,6 +48,16 @@ public class DepositState implements ConsoleState {
             System.out.println("Введите порядковый номер счета:");
             number = Integer.parseInt(consoleManager.readLine());
         } while (number < 1 || number > accounts.size());
+
+        receiver = accounts.get(number - 1);
+
+        int sum; // TODO: оптимизировать под BigDecimal
+        do {
+            System.out.printf("Введите сумму пополнения в %s: \n", receiver.getCurrency());
+            sum = Integer.parseInt(consoleManager.readLine());
+        } while (sum <= 0);
+
+        consoleManager.clear();
 
         Transaction transaction = Transaction.builder()
                 .to(receiver)

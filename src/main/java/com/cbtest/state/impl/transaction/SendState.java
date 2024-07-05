@@ -4,6 +4,7 @@ import com.cbtest.exceptions.account.AccountNotExistsException;
 import com.cbtest.exceptions.transaction.OutOfMoney;
 import com.cbtest.in.ConsoleManager;
 import com.cbtest.in.ConsoleManagerFactory;
+import com.cbtest.mapper.CurrencyExchanger;
 import com.cbtest.models.Account;
 import com.cbtest.models.Transaction;
 import com.cbtest.service.AccountService;
@@ -14,6 +15,7 @@ import com.cbtest.state.ConsoleState;
 import com.cbtest.state.impl.MainState;
 
 import java.math.BigDecimal;
+import java.util.Currency;
 import java.util.List;
 
 import static com.cbtest.mapper.FromDtoMapper.accFromDto;
@@ -39,7 +41,8 @@ public class SendState implements ConsoleState {
             System.out.println("Выберите счет отправителя (введите номер счета, с которого отправятся деньги):");
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < accounts.size(); i++) {
-                sb.append(i + 1).append(" - ").append(accounts.get(i).getAccountNumber()).append("\n");
+                sb.append(i + 1).append(" - ").append(accounts.get(i).getAccountNumber())
+                        .append(" - ").append(accounts.get(i).getCurrency()).append("\n");
             }
             System.out.print(sb);
 
@@ -52,11 +55,11 @@ public class SendState implements ConsoleState {
         Account sender = accounts.get(number - 1);
             System.out.println("Счет-отправитель - " + sender.getAccountNumber());
 
-            int sum; // TODO: оптимизировать под BigDecimal
+            BigDecimal sum; // TODO: оптимизировать под BigDecimal
             do {
-                System.out.println("Введите сумму перевода:");
-                sum = Integer.parseInt(consoleManager.readLine());
-            } while (sum <= 0);
+                System.out.printf("Введите сумму перевода в %s \n", sender.getCurrency());
+                sum = BigDecimal.valueOf(Integer.parseInt(consoleManager.readLine()));
+            } while (sum.doubleValue() < 0 || sum.doubleValue() > sender.getBalance().doubleValue());
 
             consoleManager.clear();
 
@@ -71,13 +74,20 @@ public class SendState implements ConsoleState {
                 if (numberRes == number) {
                     throw new IllegalArgumentException("Нельзя перевести деньги со счета на тот же счет!");
                 }
-                receiver = accounts.get(numberRes);
+                receiver = accounts.get(numberRes - 1);
             } while (numberRes < 1 || numberRes > accounts.size());
+
+            if (!sender.getCurrency().equals(receiver.getCurrency())) {
+                Account.Currency senderCurrency = sender.getCurrency();
+                Account.Currency receiverCurrency = receiver.getCurrency();
+
+                sum = CurrencyExchanger.exchange(sum, senderCurrency, receiverCurrency);
+            }
 
             Transaction transaction = Transaction.builder()
                     .from(sender)
                     .to(receiver)
-                    .sum(BigDecimal.valueOf(sum))
+                    .sum(sum)
                     .build();
 
             transactionService.send(transaction);

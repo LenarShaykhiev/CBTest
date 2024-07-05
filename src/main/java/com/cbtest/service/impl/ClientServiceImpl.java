@@ -54,7 +54,7 @@ public class ClientServiceImpl implements ClientService {
         if (clientRepository.getAllByAccountsNotEmpty().isPresent() && !clientRepository.getAllByAccountsNotEmpty().get().isEmpty()) {
             return from(clientRepository.getAllByAccountsNotEmpty().get());
         } else {
-            throw new ClientExistException("Нет созданных клиентов");
+            throw new ClientExistException("Нет созданных счетов!");
         }
     }
 

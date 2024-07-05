@@ -25,7 +25,7 @@ public class MainState implements ConsoleState {
                 "'2' - Создать счет клиенту%n " +
                 "'3' - Закрыть счет клиенту%n " +
                 "'4' - Перевести денежные средства%n " +
-                "'5' - зачислить денежные средства%n");
+                "'5' - Зачислить денежные средства%n");
         String input = consoleManager.readLine();
         if (input == null) {
             System.out.println("Введите нужный пункт:");

@@ -79,7 +79,7 @@ public class CreateAccountState implements ConsoleState {
         } while (currency.isBlank());
 
         try {
-            Account account = Account.builder()
+            Account accountRes = Account.builder()
                     .accountNumber(accountNumber)
                     .bik(bik)
                     .currency(Account.Currency.valueOf(currency.toUpperCase()))
@@ -87,7 +87,7 @@ public class CreateAccountState implements ConsoleState {
                     .client(client)
                     .isValid(true)
                     .build();
-            accountService.addAccount(AccountDto.from(account));
+            accountService.addAccount(AccountDto.from(accountRes));
             System.out.println("Счет с номером " + accountNumber + " успеешно создан! Нажмите 'Enter' для возврата в главное меню");
         } catch (AccountExistsException e) {
             System.out.println(e.getMessage() + ". Нажмите 'Enter' для возврата в главное меню");

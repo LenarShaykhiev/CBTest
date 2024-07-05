@@ -31,7 +31,7 @@ public class AccountServiceImpl implements AccountService {
 
 
     @Override
-    public AccountDto addAccount(AccountDto accountDto) throws AccountExistsException, ClientNotExistException {
+    public Account addAccount(AccountDto accountDto) throws AccountExistsException, ClientNotExistException {
         Account account = Account.builder()
                 .accountNumber(accountDto.getAccountNumber())
                 .bik(accountDto.getBik())
@@ -44,7 +44,7 @@ public class AccountServiceImpl implements AccountService {
         Client client = account.getClient();
         client.getAccounts().add(account);
         clientService.updateClient(ClientDto.from(client), client.getNumber());
-        return from(accountRepository.saveAccount(account));
+        return accountRepository.saveAccount(account);
     }
 
     @Override
