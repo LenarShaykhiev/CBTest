@@ -33,10 +33,8 @@ public class CloseAccountState implements ConsoleState {
             this.clientService = ClientServiceFactory.getClientService();
             this.consoleManager = ConsoleManagerFactory.getConsoleManager();
         }
-
     @Override
     public void run() throws Exception {
-        try {
             List<Client> clients = clientFromDto(clientService.getAllClientsByAccountIsExists());
             System.out.println("Выберите клиента (введите номер клиента, чей счет нужно закрыть):");
             StringBuilder sb = new StringBuilder();
@@ -53,23 +51,16 @@ public class CloseAccountState implements ConsoleState {
 
             client = clients.get(number - 1);
             System.out.println("Клиент - " + client.getFullName());
-        } catch (NoSuchElementException e) {
-            System.out.println("Клиенты с открытым счетом не найдены. Нажмите 'Enter' для возврата в главное меню");
-            consoleManager.readLine();
-            consoleManager.clear();
-            nextState = new MainState();
-        }
 
-        try {
             List<Account> accounts = accFromDto(accountService.getAccountsByClient(client));
             System.out.println("Выберите счет для закрытия (введите номер счета):");
-            StringBuilder sb = new StringBuilder();
+            sb = new StringBuilder();
             for (int i = 0; i < accounts.size(); i++) {
                 sb.append(i + 1).append(" - ").append(accounts.get(i).getAccountNumber()).append("\n");
             }
             System.out.println(sb);
 
-            int number;
+            number = 0;
             do {
                 System.out.println("Введите порядковый номер счета:");
                 number = Integer.parseInt(consoleManager.readLine());
@@ -77,15 +68,12 @@ public class CloseAccountState implements ConsoleState {
 
             account = accounts.get(number - 1);
             accountService.closeAccount(from(account));
-            System.out.println("Аккаунт " + account.getAccountNumber() + "закрыт.");
-        } catch (AccountNotExistsException e) {
-            System.out.println("У запрашиваемого клиента нет открытого счета. Нажмите 'Enter' для возврата в главное меню");
-        } finally {
+            System.out.println("Аккаунт " + account.getAccountNumber() + "закрыт. Нажмите 'Enter' для возврата в главное меню.");
+
             consoleManager.readLine();
             consoleManager.clear();
             nextState = new MainState();
         }
-    }
 
 
     @Override

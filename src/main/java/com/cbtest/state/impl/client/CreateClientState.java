@@ -23,7 +23,6 @@ public class CreateClientState implements ConsoleState {
 
     @Override
     public void run() throws Exception {
-
         String firstName;
         do {
             System.out.println("Введите имя:");

@@ -55,6 +55,7 @@ public class CreateAccountState implements ConsoleState {
             System.out.println("Клиент - " + client.getFullName());
         } catch (NoSuchElementException e) {
             System.out.println("Клиенты не найдены. Нажмите 'Enter' для возврата в главное меню");
+        } finally {
             consoleManager.readLine();
             consoleManager.clear();
             nextState = new MainState();

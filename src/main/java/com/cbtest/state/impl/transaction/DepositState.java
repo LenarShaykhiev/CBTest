@@ -51,6 +51,8 @@ public class DepositState implements ConsoleState {
 
         receiver = accounts.get(number - 1);
 
+        consoleManager.clear();
+
         int sum; // TODO: оптимизировать под BigDecimal
         do {
             System.out.printf("Введите сумму пополнения в %s: \n", receiver.getCurrency());
@@ -63,8 +65,11 @@ public class DepositState implements ConsoleState {
                 .to(receiver)
                 .sum(BigDecimal.valueOf(sum))
                 .build();
-
         transactionService.debit(transaction);
+
+        System.out.println("Пополнение счета успешно завершено! Нажмите 'Enter' для возврата в главное меню");
+        consoleManager.readLine();
+        consoleManager.clear();
     }
 
     @Override
